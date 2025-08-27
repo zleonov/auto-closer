@@ -37,7 +37,7 @@ public final class AutoCloserTest {
     }
 
     @Test
-    public void test_register_null_resource_does_not_affect_closing() throws Exception {
+    public void test_register_null_does_not_affect_closing() throws Exception {
         final AutoCloser    closer    = new AutoCloser();
         final MockCloseable resource1 = new MockCloseable();
         final MockCloseable resource2 = new MockCloseable();
@@ -72,7 +72,7 @@ public final class AutoCloserTest {
     }
 
     @Test
-    public void test_close_multiple_resources_in_reverse_order() throws Exception {
+    public void test_close_multiple_resources_in_LIFO_order() throws Exception {
         final AutoCloser          closer    = new AutoCloser();
         final List<MockCloseable> resources = new ArrayList<>();
         final List<Integer>       order     = new ArrayList<>();

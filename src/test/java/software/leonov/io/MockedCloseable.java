@@ -1,10 +1,9 @@
 package software.leonov.io;
 
-/**
- * Mock {@code AutoCloseable} for testing.
- */
-class MockCloseable implements AutoCloseable {
-    private boolean               closed = false;
+final class MockCloseable implements AutoCloseable {
+
+    private boolean closed = false;
+
     private final CheckedRunnable action;
 
     public MockCloseable() {
@@ -30,9 +29,6 @@ class MockCloseable implements AutoCloseable {
         return closed;
     }
 
-    /**
-     * A {@code Runnable} analog which can throw a checked Exception.
-     */
     @FunctionalInterface
     static interface CheckedRunnable {
         void run() throws Exception;
