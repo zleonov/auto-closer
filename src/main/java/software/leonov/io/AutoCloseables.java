@@ -1,0 +1,65 @@
+package software.leonov.io;
+
+import static java.util.Objects.requireNonNull;
+
+import java.util.function.Consumer;
+
+/**
+ * A utility class for working with {@code AutoCloseable} instances.
+ *
+ * @author Zhenya Leonov
+ */
+public final class AutoCloseables {
+
+    private AutoCloseables() {
+    };
+
+    /**
+     * Closes an {@link AutoCloseable} resource if it is not {@code null}. If an error is thrown it will be
+     * {@link Throwable#addSuppressed(Throwable) appended} to the primary exception.
+     * <p>
+     * This method is primarily useful when cleaning up resources in a catch/finally block stemming from an earlier error.
+     * 
+     * @param resource the {@code AutoCloseable} resource to close or {@code null} in which case this method is a no-op
+     * @param t        the primary exception which occurred earlier
+     */
+    public static void closeQuietly(final AutoCloseable resource, final Throwable t) {
+        requireNonNull(t, "t == null");
+        closeQuietly(resource, t::addSuppressed);
+    }
+
+    /**
+     * Closes an {@link AutoCloseable} resource if it is not {@code null}, with explicit control over how to handle any
+     * error that may occur.
+     * <p>
+     * This is primarily useful when manually cleaning up resources, where a thrown exception needs to be logged,
+     * suppressed, or otherwise handled without being propagated.
+     * <p>
+     * <b>Discussion:</b> Common {@code closeQuietly} implementations generally fall into two categories:
+     * </p>
+     * <ul>
+     * <li>They silently ignore any {@link Exception} that occurs during the closing process. While seemingly convenient,
+     * this can mask critical errors, especially when writing to an I/O resource where data loss or corruption might occur
+     * without any indication.</li>
+     * <li>They log any closing exception using {@code java.util.logging}. This approach is preferable because it
+     * acknowledges the error, but it lacks flexibility, as the user has no direct control over the logger configuration or
+     * the handling of the logged exception.</li>
+     * </ul>
+     * <p>
+     * In contrast, this method allows the user to provide a {@link Consumer} that will be invoked with any {@link Throwable
+     * error} thrown by the {@code close()} method. This enables you to implement custom error logging, reporting, or
+     * recovery mechanisms tailored to your specific application needs.
+     * 
+     * @param resource the {@code AutoCloseable} resource to close or {@code null} in which case this method is a no-op
+     * @param consumer the exception handler to use
+     */
+    public static void closeQuietly(final AutoCloseable resource, final Consumer<Throwable> consumer) {
+        if (resource != null)
+            try {
+                resource.close();
+            } catch (final Throwable t) {
+                consumer.accept(t);
+            }
+    }
+
+}
