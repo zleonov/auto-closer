@@ -108,7 +108,7 @@
                     </links>
                     -->
                     <additionalOptions>--allow-script-in-comments</additionalOptions>
-                    <footer>${primejs}</footer>                    
+                    <footer>${primejs}</footer>
                 </configuration>
                 <executions>
                     <execution>

@@ -36,7 +36,7 @@ import java.util.Deque;
  *     final InputStream in = closer.register(...);
  *     final OutputStream out = closer.register(...);
  *     ...
- * } catch (final Throwable t) {
+ * } catch (final Throwable t) { // We catch a Throwable instance to ensure that all possible errors are caught
  *     throw closer.rethrow(t);
  * } finally {
  *     closer.close();
@@ -130,7 +130,7 @@ public final class AutoCloser implements AutoCloseable {
             throw exception(th);
     }
 
-    // This method always throws; the return type simply enables the 'throw propagate(Throwable)' syntax
+    // This method always throws; the return type simply enables the 'throw exception(Throwable)' syntax
     private RuntimeException exception(final Throwable th) throws Exception {
         if (th instanceof Exception)
             throw (Exception) th;

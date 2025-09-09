@@ -15,17 +15,17 @@ public final class AutoCloseables {
     };
 
     /**
-     * Closes an {@link AutoCloseable} resource if it is not {@code null}. If an error is thrown it will be
-     * {@link Throwable#addSuppressed(Throwable) appended} to the primary exception.
+     * Closes an {@link AutoCloseable} resource if it is not {@code null}, {@link Throwable#addSuppressed(Throwable)
+     * appending} any error to the primary exception.
      * <p>
      * This method is primarily useful when cleaning up resources in a catch/finally block stemming from an earlier error.
      * 
      * @param resource the {@code AutoCloseable} resource to close or {@code null} in which case this method is a no-op
-     * @param t        the primary exception which occurred earlier
+     * @param primary  the primary exception which occurred earlier
      */
-    public static void closeQuietly(final AutoCloseable resource, final Throwable t) {
-        requireNonNull(t, "t == null");
-        closeQuietly(resource, t::addSuppressed);
+    public static void closeQuietly(final AutoCloseable resource, final Throwable primary) {
+        requireNonNull(primary, "t == null");
+        closeQuietly(resource, primary::addSuppressed);
     }
 
     /**
